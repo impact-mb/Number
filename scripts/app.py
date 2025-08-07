@@ -74,14 +74,12 @@ def main():
 
                         render_session_attendance_by_date(cleaned_df)
                         render_india_map(cleaned_df)
-
                     else:
                         st.warning("The uploaded file seems empty or unsupported.")
                 except Exception as e:
                     st.error(f"❌ Failed to process file: {str(e)}")
         else:
             st.warning("Please upload a Delivery Details file to begin.")
-
 
     elif nav_option == "delivery":
         st.subheader("Upload Delivery File")
