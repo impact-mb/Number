@@ -24,7 +24,7 @@ def main():
     with nav_col2:
         cumulative_btn = st.button("📊 Cumulative Report", type="primary")
     with nav_col3:
-        delivery_data_btn = st.button("📁 Delivery Data", type="primary")
+        delivery_data_btn = st.button("📁 Delivery Data[Dump]", type="primary")
 
     if 'nav_page' not in st.session_state:
         st.session_state['nav_page'] = 'delivery_data'
@@ -50,19 +50,19 @@ def main():
 
         if additional_file:
             if additional_file.size > 10 * 1024 * 1024:
-                st.error("❌ File size exceeds 10MB limit.")
+                st.error("File size exceeds 10MB limit.")
             else:
                 try:
                     additional_df = load_generic_file(additional_file)
                     if not additional_df.empty:
-                        st.success(f"✅ File '{additional_file.name}' loaded successfully.")
+                        st.success(f"File '{additional_file.name}' loaded successfully.")
                         analyzer2 = DataAnalyzer(additional_df)
                         cleaned_df = analyzer2.remove_duplicates()
 
-                        st.markdown("### 🔍 Preview of Uploaded Delivery Data")
+                        st.markdown("Preview of Uploaded Delivery Data")
                         st.dataframe(cleaned_df)
 
-                        st.markdown("### 📊 Basic Statistics")
+                        st.markdown("Basic Statistics")
                         st.json({
                             "Rows": len(cleaned_df),
                             "Columns": len(cleaned_df.columns),
@@ -74,7 +74,7 @@ def main():
                     else:
                         st.warning("The uploaded file seems empty or unsupported.")
                 except Exception as e:
-                    st.error(f"❌ Failed to process file: {str(e)}")
+                    st.error(f"Failed to process file: {str(e)}")
         else:
             st.warning("Please upload a Delivery Details file to begin.")
 

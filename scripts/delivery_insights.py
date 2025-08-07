@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 def render_session_attendance_by_date(df):
-    st.markdown("### 📅 Session Attendance by Date & Curriculum")
+    st.markdown("Session Attendance by Date & Curriculum")
 
     df['SessionHeldOn'] = pd.to_datetime(df['SessionHeldOn'], errors='coerce')
     df = df.dropna(subset=['SessionHeldOn', 'ChildID', 'CurriculumCode'])
@@ -15,7 +15,7 @@ def render_session_attendance_by_date(df):
 
     filtered_df = df[df['SessionDate'] == selected_date]
 
-    # 🔍 Inline Filters (2 rows of 3 columns each)
+    # Inline Filters (2 rows of 3 columns each)
     col1, col2, col3 = st.columns(3)
     col4, col5, col6 = st.columns(3)
 
