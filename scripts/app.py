@@ -45,38 +45,43 @@ def main():
         st.warning("Cumulative report requires both Delivery Details and Planner files uploaded in the Delivery Data tab.")
 
     elif nav_option == "delivery_data":
-        st.subheader("Upload Delivery Data File (Excel/CSV, Max 10MB)")
-        additional_file = st.file_uploader("Upload Excel or CSV", type=["xlsx", "csv"], key="additional_delivery")
+    st.subheader("Upload Delivery Data File (Excel/CSV, Max 10MB)")
+    additional_file = st.file_uploader("Upload Excel or CSV", type=["xlsx", "csv"], key="additional_delivery")
 
-        if additional_file:
-            if additional_file.size > 10 * 1024 * 1024:
-                st.error("File size exceeds 10MB limit.")
-            else:
-                try:
-                    additional_df = load_generic_file(additional_file)
-                    if not additional_df.empty:
-                        st.success(f"File '{additional_file.name}' loaded successfully.")
-                        analyzer2 = DataAnalyzer(additional_df)
-                        cleaned_df = analyzer2.remove_duplicates()
-
-                        st.markdown("Preview of Uploaded Delivery Data")
-                        st.dataframe(cleaned_df)
-
-                        st.markdown("Basic Statistics")
-                        st.json({
-                            "Rows": len(cleaned_df),
-                            "Columns": len(cleaned_df.columns),
-                            "Duplicate Records Removed": analyzer2.duplicate_count
-                        })
-
-                        render_session_attendance_by_date(cleaned_df)
-                        render_india_map(cleaned_df)
-                    else:
-                        st.warning("The uploaded file seems empty or unsupported.")
-                except Exception as e:
-                    st.error(f"Failed to process file: {str(e)}")
+    if additional_file:
+        if additional_file.size > 10 * 1024 * 1024:
+            st.error("❌ File size exceeds 10MB limit.")
         else:
-            st.warning("upload a Delivery Data file to begin.")
+            try:
+                additional_df = load_generic_file(additional_file)
+                if not additional_df.empty:
+                    st.success(f"✅ File '{additional_file.name}' loaded successfully.")
+                    analyzer2 = DataAnalyzer(additional_df)
+                    cleaned_df = analyzer2.remove_duplicates()
+
+                    st.markdown("### 🔍 Preview of Uploaded Delivery Data")
+                    if st.checkbox("Show full dataset"):
+                        st.dataframe(cleaned_df)
+                    else:
+                        st.dataframe(cleaned_df.head(10))
+
+                    st.markdown("### 📊 Basic Statistics")
+                    st.json({
+                        "Rows": len(cleaned_df),
+                        "Columns": len(cleaned_df.columns),
+                        "Duplicate Records Removed": analyzer2.duplicate_count
+                    })
+
+                    render_session_attendance_by_date(cleaned_df)
+                    render_india_map(cleaned_df)
+
+                else:
+                    st.warning("The uploaded file seems empty or unsupported.")
+            except Exception as e:
+                st.error(f"❌ Failed to process file: {str(e)}")
+    else:
+        st.warning("Please upload a Delivery Details file to begin.")
+
 
     elif nav_option == "delivery":
         st.subheader("Upload Delivery File")
