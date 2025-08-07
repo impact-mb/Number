@@ -37,14 +37,14 @@ def render_session_attendance_by_date(df):
         st.warning("No sessions found for the selected filters.")
         return
 
-    # 🧮 Group data
+    # Group data
     merged_summary = (
         filtered_df.groupby(['REGIONNAME', 'STATENAME', 'DISTRICTNAME', 'CurriculumCode', 'Gender'])['ChildID']
         .nunique()
         .reset_index(name='UniqueChildrenAttended')
     )
 
-    # 📊 Bar Chart
+    # Bar Chart
     fig = px.bar(
         merged_summary,
         x='UniqueChildrenAttended',
@@ -60,7 +60,7 @@ def render_session_attendance_by_date(df):
     fig.update_traces(textposition='inside')
     st.plotly_chart(fig, use_container_width=True)
 
-    # 📋 Summary Table
+    #  Summary Table
     pivot_table = merged_summary.pivot_table(
         index=['REGIONNAME', 'STATENAME', 'DISTRICTNAME', 'CurriculumCode'],
         columns='Gender',
@@ -71,11 +71,11 @@ def render_session_attendance_by_date(df):
     if 'Male' in pivot_table.columns and 'Female' in pivot_table.columns:
         pivot_table = pivot_table[['REGIONNAME', 'STATENAME', 'DISTRICTNAME', 'CurriculumCode', 'Male', 'Female']]
 
-    st.markdown("#### 📋 Summary Table")
+    st.markdown("#Summary Table")
     st.dataframe(pivot_table, use_container_width=True)
 
-    # 📊 Statistics
-    st.markdown("### 🧮 Summary Statistics")
+    #  Statistics
+    st.markdown("Summary Statistics")
     st.write({
         "Total Curriculum Sessions": pivot_table['CurriculumCode'].nunique(),
         "Total Children Attended": int(pivot_table[['Male', 'Female']].sum().sum())
